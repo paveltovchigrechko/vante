@@ -31,6 +31,6 @@ func (m *Match) Simulate() {
 	m.GuestScore = rand.Intn(5)
 }
 
-func (m *Match) PrintResult() string {
-	return fmt.Sprintf("%s - %s %d:%d\n", m.Host.Name, m.Guest.Name, m.HostScore, m.GuestScore)
+func (m *Match) PrintResult() {
+	fmt.Printf("%s - %s %d:%d\n", m.Host.Name, m.Guest.Name, m.HostScore, m.GuestScore)
 }
