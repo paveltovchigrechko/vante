@@ -11,7 +11,7 @@ type League struct {
 	Name  string
 	Teams []*team.Team
 
-	Schedule [][]*match.Match
+	Schedule *Schedule
 }
 
 func New(name string, teams []*team.Team) *League {
@@ -21,13 +21,14 @@ func New(name string, teams []*team.Team) *League {
 	}
 }
 
+// Make this function create schedule for N rounds
 func (l *League) GenerateSchedule() error {
 	lastIndex := len(l.Teams) - 1
 	mid := len(l.Teams) / 2
-	tours := make([][]*match.Match, 0, lastIndex)
+	tours := &Schedule{}
 
 	for i := 0; i <= lastIndex-1; i++ {
-		tour := make([]*match.Match, 0)
+		var tour tour
 		for j := 0; j < mid; j++ {
 			host := l.Teams[j]
 			guest := l.Teams[lastIndex-j]
@@ -36,7 +37,7 @@ func (l *League) GenerateSchedule() error {
 		}
 
 		rotate(l.Teams)
-		tours = append(tours, tour)
+		tours.Tours = append(tours.Tours, tour)
 	}
 
 	l.Schedule = tours
@@ -45,7 +46,7 @@ func (l *League) GenerateSchedule() error {
 }
 
 func (l *League) PrintSchedule() error {
-	for tour, matches := range l.Schedule {
+	for tour, matches := range l.Schedule.Tours {
 		fmt.Printf("Tour %d\n", tour+1)
 		for _, match := range matches {
 			match.PrintResult()
