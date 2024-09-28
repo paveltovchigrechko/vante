@@ -23,6 +23,10 @@ func (l *League) CreateNewSeason() {
 	s := &Season{
 		Teams:    l.CurrentTeams,
 		Schedule: &Schedule{},
+		Statistics: &Statistics{
+			Team:  make(map[*team.Team]TeamStats, len(l.CurrentTeams)),
+			Table: Table{},
+		},
 	}
 	l.Seasons = append(l.Seasons, s)
 }
@@ -33,13 +37,12 @@ func (l *League) SimulateSeason() {
 	l.Seasons[curSeason].Simulate()
 }
 
-func (l *League) PrintCurrentSeason() {
+func (l *League) PrintCurrentSchedule() {
 	curSeason := len(l.Seasons) - 1
 	l.Seasons[curSeason].PrintSchedule()
 }
 
-func rotate(arr []*team.Team) {
-	lastIndex := len(arr) - 1
-	tail := append(arr[lastIndex:], arr[1:lastIndex]...)
-	arr = append(arr[:1], tail...)
+func (l *League) PrintCurrentTable() {
+	curSeason := len(l.Seasons) - 1
+	l.Seasons[curSeason].Statistics.Table.Print()
 }
