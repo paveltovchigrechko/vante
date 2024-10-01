@@ -40,7 +40,7 @@ func (t Table) Swap(i, j int) {
 
 func (t Table) Print() {
 	w := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', tabwriter.AlignRight)
-	fmt.Fprintf(w, "#\tTeam\tG\tP\tW\tD\tL\tGF\tGA\tGD\t\n")
+	fmt.Fprintf(w, "#\tTeam\tPlayed\tPoints\tWon\tDrawn\tLost\tGF\tGA\tGD\t\n")
 	for i, stat := range t {
 		fmt.Fprintf(w, "%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t\n", i+1, stat.team, stat.Games, stat.Points, stat.Wins, stat.Draws, stat.Losses, stat.GoalsFor, stat.GoalsAgainst, stat.GoalDifference)
 	}

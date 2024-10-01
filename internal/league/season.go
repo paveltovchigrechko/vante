@@ -105,6 +105,7 @@ func (s *Season) generateRound() {
 	}
 }
 
+// Rotates the teams leaving the first one in place and moving all the rest to one position right.
 func rotate(arr []*team.Team) {
 	lastIndex := len(arr) - 1
 	tail := append(arr[lastIndex:], arr[1:lastIndex]...)
