@@ -10,7 +10,7 @@ import (
 )
 
 type Season struct {
-	Teams      []*team.Team
+	Teams      []team.Team
 	Schedule   *Schedule
 	Statistics *Statistics
 }
@@ -42,8 +42,8 @@ func (s *Season) Simulate() {
 }
 
 func (s *Season) addStatistics(m *match.Match) {
-	hostStats := s.Statistics.Team[m.Host]
-	guestStats := s.Statistics.Team[m.Guest]
+	hostStats := s.Statistics.Team[m.Host.Name]
+	guestStats := s.Statistics.Team[m.Guest.Name]
 
 	hostStats.team = m.Host.Name
 	guestStats.team = m.Guest.Name
@@ -75,8 +75,8 @@ func (s *Season) addStatistics(m *match.Match) {
 	guestStats.GoalsAgainst += m.HostScore
 	guestStats.GoalDifference = guestStats.GoalsFor - guestStats.GoalsAgainst
 
-	s.Statistics.Team[m.Host] = hostStats
-	s.Statistics.Team[m.Guest] = guestStats
+	s.Statistics.Team[m.Host.Name] = hostStats
+	s.Statistics.Team[m.Guest.Name] = guestStats
 }
 
 func (s *Season) makeTable() {
@@ -96,7 +96,7 @@ func (s *Season) generateRound() {
 		for j := 0; j < mid; j++ {
 			host := s.Teams[j]
 			guest := s.Teams[lastIndex-j]
-			m, _ := match.New(host, guest)
+			m, _ := match.New(&host, &guest)
 			tour = append(tour, m)
 		}
 
@@ -106,7 +106,7 @@ func (s *Season) generateRound() {
 }
 
 // Rotates the teams leaving the first one in place and moving all the rest to one position right.
-func rotate(arr []*team.Team) {
+func rotate(arr []team.Team) {
 	lastIndex := len(arr) - 1
 	tail := append(arr[lastIndex:], arr[1:lastIndex]...)
 	arr = append(arr[:1], tail...)

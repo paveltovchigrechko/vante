@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"text/tabwriter"
-
-	"github.com/paveltovchigrechko/vante/internal/team"
 )
 
 type TeamStats struct {
@@ -21,7 +19,7 @@ type TeamStats struct {
 }
 
 type Statistics struct {
-	Team  map[*team.Team]TeamStats
+	Team  map[string]TeamStats
 	Table Table
 }
 type Table []TeamStats
