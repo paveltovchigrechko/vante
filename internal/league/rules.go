@@ -1,5 +1,6 @@
 package league
 
 type Rules struct {
-	rotation Rotation
+	rotation    Rotation
+	roundNumber int
 }

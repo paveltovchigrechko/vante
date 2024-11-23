@@ -1,5 +1,7 @@
 package league
 
+// Pyramid represents a hierarchy of leagues.
+// The league order dictates the position of a league in the pyramid.
 type Pyramid struct {
 	Leagues []*League
 }
@@ -15,8 +17,8 @@ func (p *Pyramid) SwapTeams() {
 	for i := 0; i < leaguePairs; i++ {
 		upperLeague := p.Leagues[i]
 		lowerLeague := p.Leagues[i+1]
-		relegatedTeams := upperLeague.RemoveRelegated()
-		promotedTeams := lowerLeague.RemovePromoted()
+		relegatedTeams := upperLeague.RemoveRelegatedTeams()
+		promotedTeams := lowerLeague.RemovePromotedTeams()
 		upperLeague.AddTeams(promotedTeams)
 		lowerLeague.AddTeams(relegatedTeams)
 	}

@@ -1,6 +1,7 @@
 package league
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -25,6 +26,7 @@ func New(name string, teams []*team.Team) *League {
 				relegationTeams: 2,
 				promotionTeams:  2,
 			},
+			2,
 		},
 	}
 }
@@ -48,7 +50,7 @@ func (l *League) CreateNewSeason() {
 
 func (l *League) SimulateSeason() {
 	curSeason := len(l.Seasons) - 1
-	l.Seasons[curSeason].GenerateSchedule(2)
+	l.Seasons[curSeason].GenerateSchedule(l.Rules.roundNumber)
 	l.Seasons[curSeason].Simulate()
 }
 
@@ -62,6 +64,7 @@ func (l *League) PrintCurrentTable() {
 	l.Seasons[curSeason].Statistics.Table.Print()
 }
 
+// Returns a list of the last N teams in the current season (i.e. relegated teams that should go to the lower league). N equals `l.Rules.Potation.relegationTeams`.
 func (l *League) getRelegated() []*team.Team {
 	curSeason := len(l.Seasons) - 1
 	offset := len(l.Seasons[curSeason].Teams) - l.Rules.rotation.relegationTeams
@@ -77,7 +80,8 @@ func (l *League) getRelegated() []*team.Team {
 	return relegated
 }
 
-func (l *League) RemoveRelegated() []*team.Team {
+// Removes from the current league teams the last N teams in the current season and returns them as a list. N equals `l.Rules.Potation.relegationTeams`. Does not remove teams from the current season.
+func (l *League) RemoveRelegatedTeams() []*team.Team {
 	relegated := l.getRelegated()
 	for _, team := range relegated {
 		l.removeTeam(team.Name)
@@ -85,6 +89,7 @@ func (l *League) RemoveRelegated() []*team.Team {
 	return relegated
 }
 
+// Returns a list of the first N teams in the current season (i.e. promoted teams that should go to the upper league). N equals `l.Rules.Potation.promotionTeams`.
 func (l *League) getPromoted() []*team.Team {
 	curSeason := len(l.Seasons) - 1
 	promoted := []*team.Team{}
@@ -100,7 +105,8 @@ func (l *League) getPromoted() []*team.Team {
 	return promoted
 }
 
-func (l *League) RemovePromoted() []*team.Team {
+// Removes from the current league teams the first N teams in the current season and returns them as a list. N equals `l.Rules.Potation.promotionTeams`. Does not remove teams from the current season.
+func (l *League) RemovePromotedTeams() []*team.Team {
 	promoted := l.getPromoted()
 	for _, team := range promoted {
 		l.removeTeam(team.Name)
@@ -123,5 +129,11 @@ func (l *League) removeTeam(name string) {
 				return team.Name == name
 			})
 		}
+	}
+}
+
+func (l *League) ListTeams() {
+	for _, t := range l.CurrentTeams {
+		fmt.Println(t.Name)
 	}
 }
