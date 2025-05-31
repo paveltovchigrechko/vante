@@ -23,17 +23,17 @@ func (s *Season) GenerateSchedule(rounds int) {
 }
 
 func (s *Season) PrintSchedule() {
-	for tour, matches := range s.Schedule.Tours {
-		fmt.Printf("Tour %d\n", tour+1)
-		for _, match := range matches {
+	for i, tour := range s.Schedule.Tours {
+		fmt.Printf("Tour %d\n", i+1)
+		for _, match := range tour.matches {
 			match.PrintResult()
 		}
 	}
 }
 
 func (s *Season) Simulate() {
-	for _, matches := range s.Schedule.Tours {
-		for _, match := range matches {
+	for _, tour := range s.Schedule.Tours {
+		for _, match := range tour.matches {
 			match.Simulate()
 			s.addStatistics(match)
 		}
@@ -43,10 +43,7 @@ func (s *Season) Simulate() {
 
 // TODO: update the statistics table after each call
 func (s *Season) SimulateTour() {
-	for _, match := range *s.Schedule.GetCurrentTour() {
-		match.Simulate()
-		s.addStatistics(match)
-	}
+	s.Schedule.GetCurrentTour().simulate()
 	s.Schedule.CurrentTour += 1
 }
 
@@ -102,13 +99,15 @@ func (s *Season) generateRound() {
 
 	for i := 0; i <= lastIndex-1; i++ {
 		var tour tour
+		matches := make([]*match.Match, 0)
 		for j := 0; j < mid; j++ {
 			host := s.Teams[j]
 			guest := s.Teams[lastIndex-j]
 			m, _ := match.New(&host, &guest)
-			tour = append(tour, m)
+			matches = append(matches, m)
 		}
 
+		tour.matches = matches
 		s.Schedule.Tours = append(s.Schedule.Tours, tour)
 		rotate(s.Teams)
 	}
