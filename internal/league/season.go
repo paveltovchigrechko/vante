@@ -41,6 +41,15 @@ func (s *Season) Simulate() {
 	s.makeTable()
 }
 
+// TODO: update the statistics table after each call
+func (s *Season) SimulateTour() {
+	for _, match := range *s.Schedule.GetCurrentTour() {
+		match.Simulate()
+		s.addStatistics(match)
+	}
+	s.Schedule.CurrentTour += 1
+}
+
 func (s *Season) addStatistics(m *match.Match) {
 	hostStats := s.Statistics.Team[m.Host.Name]
 	guestStats := s.Statistics.Team[m.Guest.Name]
