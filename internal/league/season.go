@@ -38,13 +38,19 @@ func (s *Season) Simulate() {
 			s.addStatistics(match)
 		}
 	}
-	s.makeTable()
+
+	s.UpdateTable()
 }
 
-// TODO: update the statistics table after each call
 func (s *Season) SimulateTour() {
-	s.Schedule.GetCurrentTour().simulate()
+	for _, match := range s.Schedule.GetCurrentTour().matches {
+		match.Simulate()
+		s.addStatistics(match)
+	}
+
+	s.Schedule.Tours[s.Schedule.CurrentTour].is_played = true
 	s.Schedule.CurrentTour += 1
+	s.UpdateTable()
 }
 
 func (s *Season) addStatistics(m *match.Match) {
@@ -91,6 +97,15 @@ func (s *Season) makeTable() {
 		sort.Slice(s.Statistics.Table, s.Statistics.Table.ByPoints)
 		slices.Reverse(s.Statistics.Table)
 	}
+}
+
+func (s *Season) resetTable() {
+	s.Statistics.resetTable()
+}
+
+func (s *Season) UpdateTable() {
+	s.resetTable()
+	s.makeTable()
 }
 
 func (s *Season) generateRound() {

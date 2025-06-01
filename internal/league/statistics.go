@@ -22,6 +22,13 @@ type Statistics struct {
 	Team  map[string]TeamStats
 	Table Table
 }
+
+func (s *Statistics) resetTable() {
+	if s.Table != nil {
+		s.Table = nil
+	}
+}
+
 type Table []TeamStats
 
 func (t Table) Len() int {
